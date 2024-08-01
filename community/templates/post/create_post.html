@@ -1,0 +1,59 @@
+{% extends "community_base.html" %}
+
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'inquiry_support/question.css' %}">
+{% endblock %}
+
+{% block content %}    
+<div class="container">
+    <div class="title-container">
+        <h2>게시글 작성하기</h2>
+    </div>
+    <div class="form-container">
+        <form action="{% url 'community:create_post' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-field">
+                <label for="id_community_category">게시글 카테고리</label>
+                {{ form.community_category }}
+            </div>
+            <div class="form-field">
+                <label for="id_community_title">제목</label>
+                {{ form.community_title }}
+            </div>
+            <div class="form-field">
+                <label for="id_community_img">이미지 업로드</label>
+                {{ form.community_img }}
+            </div>
+            <div class="form-field">
+                <label for="id_community_content">내용</label>
+                {{ form.community_content }}
+            </div>
+            
+            <!-- Product Search -->
+            <div id="product-container">       
+                <input type="text" id="searchInput" placeholder="상품을 검색하세요">
+                <button id="searchButton" type="button" class="submit-button">검색</button>
+            </div>
+
+            <!-- Searched Product List Container -->
+            <div id="searchedProductList"></div>
+
+            <!-- Selected Product List Container -->
+            <div id="selectedProductListContainer">
+                <div id="selectedProductList"></div>
+                <p id="noSelectedProductMessage">선택된 상품이 없습니다</p>
+            </div>
+
+            <!-- Hidden input : JSON string to server -->
+            <input type="hidden" id="hiddenInput" name="hiddenInput">
+
+            <!-- Submit Button -->
+            <button id="completeButton" type="submit" class="submit-button">작성완료</button>
+        </form>
+    </div>
+</div>
+
+<!-- create_post.js script -->
+<script src="{% static 'community/create_post.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,110 @@
+/* 웹 폰트 임포트 */
+.nanum-gothic-regular {
+    font-family: "Nanum Gothic", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+body {
+    font-family: "Nanum Gothic", Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+/* 헤더 스타일 */
+.title-container {
+    background-color: #fff; /* 상단 배경 색상 */
+    color: #333; /* 텍스트 색상 */
+    padding: 20px;
+    text-align: left;
+    margin-bottom: 20px; /* 하단 여백 */
+    border-bottom: 2px solid #3f3f3f; /* 검은색 밑줄 */
+}
+
+
+.title-container h2 {
+    font-size: 32px; /* 글자 크기 조정 */
+    font-weight: bolder;
+    margin-bottom: 5px; /* 하단 여백 */
+}
+
+.products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: left;
+}
+
+.product {
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    width: 200px;
+    height: 230px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    overflow: hidden;
+}
+
+.products a {
+    text-decoration: none;
+    color: black;
+    border: none;
+}
+
+.product img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.product h6 {
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    font-size: 15px;
+    margin-left: 5px;
+}
+
+.product p {
+    padding: 0 10px;
+    margin: 10px 0;
+    font-size: 15px;
+    text-align: right;
+    width: 100%;
+}
+
+/* Styles for the button containing a link */
+button {
+    display: inline-block;
+    background-color: #333; /* Green background */
+    border: none;
+    color: white; /* White text */
+    padding: 15px 32px; /* Some padding */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* No underline */
+    display: inline-block;
+    font-size: 16px; /* Set a font size */
+    margin: 4px 2px; /* Some margin */
+    cursor: pointer; /* Pointer/hand icon */
+    border-radius: 8px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+button a {
+    color: white; /* White text */
+    text-decoration: none; /* No underline */
+}
+
+button:hover {
+    background-color: #000000; /* Darker green on hover */
+}
+
+button a:hover {
+    color: white; /* Ensure text remains white on hover */
+}

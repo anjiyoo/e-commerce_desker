@@ -1,0 +1,49 @@
+{% extends "customer_base.html" %}
+
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'inquiry_support/list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="title-container">
+    {% with page_title='상품 목록' %}
+        <h2>{{ page_title }}</h2>
+    {% endwith %}
+</div>
+
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>수량</th>
+                <th>총 금액</th>
+                <th>배송 상태</th>
+                <th>주문 취소</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.product.product_name }}</td>
+                <td>{{ order.product.product_price }}</td>
+                <td>{{ order.amount }}</td>
+                <td>{{ order.price }}</td>
+                <td>미정</td>
+                <td class="product-buttons">
+                    <a href="{% url 'orders:delete_order' order.id %}">
+                        <button type="button">취소</button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if orders|length == 0 %}
+    <p class="empty-message">주문이 없습니다.</p>
+    {% endif %}
+</div>
+{% endblock %}

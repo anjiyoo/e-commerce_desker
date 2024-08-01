@@ -1,0 +1,13 @@
+{% extends "noncategory_base.html" %}
+
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'users/done.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="title-container">
+    <h2>회원정보가 수정되었습니다</h2>
+</div>
+<a href="{% url 'users:store_home' %}" class="button">나의 스토어</a>
+{% endblock %}

@@ -1,0 +1,167 @@
+{% extends "customer_store_base.html" %}
+{% load humanize %} 
+
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'users/customer/store_view.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="community-section">
+  <div class="title-container">
+    <h6>스타일링샷</h6></div>
+    <div class="container mt-4">
+        <div class="row">
+            {% for post in page_obj %}
+                <div class="col-md-3 mb-4 d-flex align-items-stretch">
+                    <div class="card mb-3 box-shadow">
+                        <img class="card-img-top" src="{{ post.community_img.url }}" alt="{{ post.community_title }}">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">
+                                <a href="{% url 'community:post_detail' post.pk %}" class="post-link">
+                                    {{ post.community_title }}
+                                </a>
+                            </h5>
+                            <div class="post-footer mt-auto">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="mb-0">
+                                        <i class="bi bi-heart-fill heart-icon"></i>
+                                        <small class="text-muted">{{ post.community_like }}</small>
+                                    </p>
+                                    <p class="mb-0"><small class="text-muted">{{ post.community_date|date:'Y년 m월 d일' }}</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="col-12 text-center">등록된 커뮤니티 게시글이 없습니다.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 스타일링샷 페이징 네비게이션 -->
+<nav aria-label="Page navigation example" class="pagination-nav">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">처음</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">이전</a></li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">처음</span></li>
+            <li class="page-item disabled"><span class="page-link">이전</span></li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">다음</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">마지막</a></li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">다음</span></li>
+            <li class="page-item disabled"><span class="page-link">마지막</span></li>
+        {% endif %}
+    </ul>
+</nav>
+
+<!-- 상품 리스트 -->
+<div class="title-container">
+    <h6>상품 리스트</h6>
+</div>
+<section class="product-section">
+    <div class="row products">
+        {% for product, discounted_price in products_with_discount %}
+        <div class="col-lg-3 col-md-4 mb-4">
+            <div class="product-card">
+                <img src="{{ product.product_img.url }}" alt="{{ product.product_name }}">
+                <a href="{{ product.get_absolute_url }}" class="product-link">
+                    <h6>{{ product.product_name }}</h6>
+                </a>
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">{{ product.product_sale }}%</small>
+                    <small class="text-muted">{{ discounted_price|floatformat:0|intcomma }}원</small>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <p class="text-center">등록된 상품이 없습니다.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+
+<!-- 스토어찜 -->
+{% if not is_store %}
+    <button type="button" id="favorites" data-user-id="{{ store.user_id }}" data-authentication="{{ is_authenticated }}" class="save-button">
+        {% if saved %}
+            스토어찜 취소
+        {% else %}
+            스토어찜
+        {% endif %}
+    </button>
+    <p id="message" class="message"></p>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');
+
+    const saveStore = function(userId, element) {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '{% url "save_and_remove_store" %}', true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.setRequestHeader('X-CSRFToken', csrftoken);  // CSRF token 설정
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          const response = JSON.parse(xhr.responseText);
+          document.getElementById('message').innerText = response.message;
+          if (response.check) {
+            element.textContent = '스토어찜 취소';
+          } else {
+            element.textContent = '스토어찜';
+          }
+        }
+      };
+
+      xhr.send(`user_id=${userId}`);
+    };
+    const favoriteButton = document.getElementById('favorites');
+    favoriteButton.addEventListener('click', function() {
+      const userId = this.getAttribute('data-user-id');
+      const isAuthenticated = parseInt(this.getAttribute('data-authentication'));
+      if (!isAuthenticated) {
+        window.location.href = '{% url "users:login" %}';
+        return;
+      }
+      saveStore(userId, this);
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'store_base.html' %}
+
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'inquiry_support/question.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="title-container">
+        <h3><strong>상품 삭제하기</strong></h3>
+    </div>
+    <div class="product-details">
+        <p><strong>상품명:</strong> {{ product.product_name }}</p>
+        <p><strong>상세 설명:</strong> {{ product.product_description }}</p>
+        <p><strong>가격:</strong> {{ product.product_price }}</p>
+        <p><strong>재고:</strong> {{ product.product_inventory }}</p>
+        <p><strong>세일:</strong> {{ product.product_sale }}</p>
+        {% if product.product_img %}
+            <p><strong>이미지:</strong></p>
+            <img src="{{ product.product_img.url }}" alt="상품 이미지">
+        {% endif %}
+    </div>
+    <!-- Form to delete the product -->
+    <form method="POST" action="{% url 'logistics:del_product' product.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-delete">상품 삭제</button>
+    </form>
+    <button type="button" class="submit-button" onclick="window.location.href='{% url 'logistics:del_list' %}'">뒤로 가기</button>
+</div>
+{% endblock %}

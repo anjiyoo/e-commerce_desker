@@ -1,0 +1,56 @@
+{% extends "store_base.html" %}
+
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'inquiry_support/list.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="title-container">
+        <h2>상품문의 목록</h2>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>제목</th>
+                <th>상품</th>
+                <th>작성일</th>
+                <th>내용</th>
+                <th>고객명</th>
+                <th>답변</th>
+                <th>답변하러가기</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in object_list %}
+                <tr>
+                    <td>{{ question.question_title }}</td>
+                    <td>{{ question.product }}</td>
+                    <td>{{ question.question_date }}</td>
+                    <td>{{ question.question_content }}</td>
+                    <td>{{ question.customer }}</td>
+                    <td>
+                        {% if question.answer_set.all %}``
+                            <ul>
+                                {% for answer in question.answer_set.all %}
+                                    <li>{{ answer.answer_content }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            답변이 달리지 않았습니다.
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not question.answer_set.all %}
+                            <a href="{% url 'inquiry:answer_create' question.pk %}">답변하러가기</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="8">게시물이 없습니다.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

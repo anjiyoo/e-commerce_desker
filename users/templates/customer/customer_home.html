@@ -1,0 +1,93 @@
+{% extends "customer_base.html" %}
+
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'users/customer/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="title-container">
+    <h2><a href="{% url 'orders:display_orders' %}">구매내역</a></h2>
+</div>
+<div class="orders">
+    {% for order in orders %}
+        <div class="order">
+            <img src="{{ order.product.product_img.url }}" alt="{{ order.product.product_name }}">
+            <a href="{{ order.product.get_absolute_url }}"><h6>{{ order.product.product_name }}</h6></a>
+            <p>{{ order.amount }}</p>
+        </div>
+    {% empty %}
+        <p>구매한 상품이 없습니다.</p>
+    {% endfor %}
+</div>
+
+<div class="title-container">
+    <h2>장바구니</h2>
+</div>
+<p>장바구니 게시판 연결</p>
+
+<div class="title-container">
+    <h2>스토어찜</h2>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>스토어</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in favorites %}
+                <tr>
+                    <td><a href="{% url 'users:cus_store_home' item.store.user_id %}">{{ item.store.store_name }}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-8"></div>
+</div>
+
+<div class="title-container">
+    <h2>팔로우/팔로잉</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-2">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>팔로우</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for person in followers %}
+                <tr>
+                    <td>{{ person.cus_nickname }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-2">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>팔로잉</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for person in following %}
+                <tr>
+                    <td>{{ person.cus_nickname }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "community_base.html" %}
+
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'inquiry_support/question.css' %}">
+{% endblock %}
+
+{% block content %}
+    <script>
+        // 서버에서 제공하는 JSON 데이터 (게시글 작성 때 데이터)
+        var initialSelectedProducts = JSON.parse('{{ selected_products_json|safe }}');
+    </script>
+    </style>
+
+    <div class="title-container">
+        <h3>게시글 수정하기</h3>
+    </div>
+    <form action="{% url 'community:edit_post' post_id=post_id %}" method="post" enctype="multipart/form-data" onsubmit="listToHiddenInput()">
+        {% csrf_token %}
+        <div class="form-field">
+            <label for="id_community_category">게시글 카테고리</label>
+            {{ form.community_category }}
+        </div>
+        <div class="form-field">
+            <label for="id_community_title">제목</label>
+            {{ form.community_title }}
+        </div>
+        <div class="form-field">
+            <label for="id_community_img"></label>
+            {{ form.community_img }}
+        </div>
+        <div class="form-field">
+            <label for="id_community_content"></label>
+            {{ form.community_content }}
+        </div>
+        
+        <!-- 상품 검색 -->
+        <div id="product-container">
+            <input type="text" id="searchInput" placeholder="상품을 검색하세요">
+            <button id="searchButton" type="button">검색</button>
+        </div>
+
+        <!-- 검색 결과를 화면에 표시하는 컨테이너 -->
+        <div id="searchedProductList"></div>
+        
+        <!-- 선택된 상품 목록 -->
+        <div id="selectedProductListContainer" style="border: 1px solid #ccc; padding: 10px; margin-top: 10px; margin-bottom: 10px;">
+            <div id="selectedProductList">
+                {% if selected_product_names %}
+                    {% for product_name in selected_product_names %}
+                        <div>
+                            {{ product_name }}
+                            <button type="button" style="background-color: transparent; border: none; padding: 0; cursor: pointer; color: rgb(165, 165, 165); font-size: 15px; text-decoration: underline; margin-left: 10px;" onclick="deleteProduct('{{ product_name }}')">삭제</button>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p id="noSelectedProductMessage">선택된 상품이 없습니다</p> <!-- 선택된 상품이 없을 때 보여질 문구 -->    
+                {% endif %}
+            </div>
+        </div>
+
+
+        <!-- 수정완료 버튼 // Hidden input : JSON 문자열 서버로 전달 -->
+        <input type="hidden" id="hiddenInput" name="hiddenInput">
+        <button type="submit" class="btn btn-dark text-white">수정완료</button>
+    </form>
+
+    <!-- edit_post.js 스크립트 추가 -->
+    <script src="{% static 'community/edit_post.js' %}"></script>
+{% endblock %}
