@@ -1,5 +1,5 @@
 
-![desker](https://github.com/kim-taeseong/desk_item_shop/assets/124543412/3e6f92e9-f614-4817-8f52-a1ad1b3fb01b)
+![2팀 시연영상(배속)](https://github.com/user-attachments/assets/9ba46c27-a44d-49ae-876d-3dbe9107aa4b)
 
 
 # DESKER 
